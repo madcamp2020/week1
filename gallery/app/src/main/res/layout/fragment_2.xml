@@ -5,11 +5,10 @@
     android:orientation="horizontal"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <GridView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/photo_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:numColumns="2"
         tools:listitem="@layout/item_photo"/>
 
 </LinearLayout>

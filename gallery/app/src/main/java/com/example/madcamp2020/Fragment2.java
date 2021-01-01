@@ -12,6 +12,9 @@ import android.os.Bundle;
 
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -37,7 +40,7 @@ import java.util.zip.Inflater;
 
     public class Fragment2 extends Fragment {
 
-    private MyCursorAdapter adapter;
+    private MyRecyclerAdapter adapter;
     private Intent intent;
 
     @Override
@@ -72,13 +75,18 @@ import java.util.zip.Inflater;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_2, container, false);
-        GridView gridview = v.findViewById(R.id.photo_list);
+        RecyclerView recyclerView = v.findViewById(R.id.photo_list);
         Cursor cursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, MediaStore.Images.ImageColumns.DATE_TAKEN+" DESC");
 
-        adapter = new MyCursorAdapter(getActivity(), cursor);
-        gridview.setAdapter(adapter);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
 
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        adapter = new MyRecyclerAdapter(getContext(), cursor);
+
+        recyclerView.setAdapter(adapter);
+/*
+        recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor cursor = (Cursor)parent.getAdapter().getItem(position);
@@ -90,7 +98,7 @@ import java.util.zip.Inflater;
                 startActivity(intent);
             }
         });
-
+*/
         return v;
     }
 
