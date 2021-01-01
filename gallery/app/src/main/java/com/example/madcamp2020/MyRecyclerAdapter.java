@@ -1,13 +1,16 @@
 package com.example.madcamp2020;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -64,6 +67,20 @@ class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.ViewHolde
         // Passing the binding operation to cursor loader
         mCursorAdapter.getCursor().moveToPosition(position); //EDITED: added this line as suggested in the comments below, thanks :)
         mCursorAdapter.bindView(holder.itemView, mContext, mCursorAdapter.getCursor());
+
+        holder.imageView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Cursor cursor = (Cursor) mCursorAdapter.getItem(position);
+                String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
+                Toast.makeText(v.getContext(), "사전경로 : "+path, Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(v.getContext(), DrawBigImage.class);
+                intent.putExtra("path", path);
+                v.getContext().startActivity(intent);
+            }
+        });
+
 
     }
 

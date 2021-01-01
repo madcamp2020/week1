@@ -85,20 +85,8 @@ import java.util.zip.Inflater;
         adapter = new MyRecyclerAdapter(getContext(), cursor);
 
         recyclerView.setAdapter(adapter);
-/*
-        recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Cursor cursor = (Cursor)parent.getAdapter().getItem(position);
-                String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
-                Toast.makeText(getActivity(), "사진경로 : "+path, Toast.LENGTH_SHORT).show();
 
-                intent = new Intent(getActivity(), DrawBigImage.class);
-                intent.putExtra("path", path);
-                startActivity(intent);
-            }
-        });
-*/
+
         return v;
     }
 
