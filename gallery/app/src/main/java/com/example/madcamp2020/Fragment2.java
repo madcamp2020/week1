@@ -1,4 +1,4 @@
-    package com.example.madcamp2020;
+package com.example.madcamp2020;
 
 import android.Manifest;
 import android.app.Activity;

@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:requestLegacyExternalStorage="true"
-        android:theme="@style/Theme.Madcamp2020">
+        android:theme="@style/AppTheme">
         <activity android:name=".DrawBigImage"
             android:theme="@style/DialogTheme"/>
         <activity android:name=".MainActivity">
