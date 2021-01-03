@@ -13,8 +13,10 @@
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="30dp"
+        android:background="@color/white"
         app:layout_constraintTop_toTopOf="@+id/tabLayout"
-        tools:layout_editor_absoluteX="-89dp" />
+        tools:layout_editor_absoluteX="-89dp"></androidx.viewpager.widget.ViewPager>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -22,12 +24,15 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
-        app:tabIndicatorColor="@android:color/black"
-        app:tabSelectedTextColor="@color/cardview_dark_background">
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        app:tabIndicatorColor="@color/white"
+        app:tabBackground="@drawable/tabcolor"
+        >
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"

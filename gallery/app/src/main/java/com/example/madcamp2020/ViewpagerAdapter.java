@@ -21,9 +21,10 @@ public class ViewpagerAdapter extends FragmentPagerAdapter {
         items.add(new Fragment2());
         items.add(new Fragment3());
 
-        itext.add("contact");
-        itext.add("gallery");
-        itext.add("health");
+        itext.add("연락처");
+        itext.add("갤러리");
+        itext.add("방명록");
+
     }
 
     @Nullable

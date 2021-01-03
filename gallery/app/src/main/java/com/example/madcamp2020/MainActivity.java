@@ -26,11 +26,13 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tab = findViewById(R.id.tabLayout);
         tab.setupWithViewPager(vp);
 
+/*
         ArrayList<Integer> images = new ArrayList<>();
         images.add(R.drawable.contact);
         images.add(R.drawable.photos);
         images.add(R.drawable.health);
 
         for(int i=0;i<3;i++) tab.getTabAt(i).setIcon(images.get(i));
+*/
     }
 }

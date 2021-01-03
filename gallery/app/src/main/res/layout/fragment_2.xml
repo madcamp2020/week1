@@ -5,6 +5,15 @@
     android:orientation="horizontal"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:textSize="20dp"
+        android:background="#B8B8BA"
+        android:fontFamily="@font/neodgm"
+        android:textColor="#707070"
+        android:text="ㅇㅇㅇ님의 미니홈피"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/photo_list"
         android:layout_width="match_parent"
