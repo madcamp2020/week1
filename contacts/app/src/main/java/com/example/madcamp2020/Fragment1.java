@@ -35,7 +35,8 @@ public class Fragment1 extends Fragment {
 
         Bundle bundle = getArguments();
         if (bundle == null) {
-            list = Contacts.createContactsList(list, getActivity(), null);
+            if (list.isEmpty())
+                list = Contacts.createContactsList(list, getActivity(), null);
             Log.i("Fragment1 item", "item null");
         }
         else {

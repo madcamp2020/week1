@@ -19,20 +19,22 @@ public class ContactsEditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts_edit);
-//        TextView tx1 = (TextView) findViewById(R.id.wordText);
-//        TextView tx2 = (TextView) findViewById(R.id.meaningText);
+        TextView tx1 = (TextView) findViewById(R.id.wordText);
+        TextView tx2 = (TextView) findViewById(R.id.meaningText);
 //        TextView tx3 = (TextView) findViewById(R.id.nicknameText);
         EditText editId = (EditText) findViewById(R.id.editText1);
 //        String nickname = editId.getText().toString();
 //        Log.i("EditActivity", nickname);
         Intent intent = getIntent();
 
-        String name = intent.getExtras().getString("name");
-//        tx1.setText(name);
+//        String name = intent.getExtras().getString("name");
 
-        String phNumbers = intent.getExtras().getString("phNumbers");
-//        tx2.setText(phNumbers);
+
+//        String phNumbers = intent.getExtras().getString("phNumbers");
+
         Contacts item = intent.getParcelableExtra("Contacts");
+        tx1.setText(item.name);
+        tx2.setText(item.phNumbers);
         Log.i("EditActivity", item.name);
         Log.i("EditActivity", item.phNumbers);
 

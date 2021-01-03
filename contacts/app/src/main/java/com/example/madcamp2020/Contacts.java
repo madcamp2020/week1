@@ -44,13 +44,14 @@ public class Contacts implements Parcelable {
                     .getString(c
                             .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             if (item!= null) {
+                int pos = contacts.indexOf(item);
                 if (item.name.equals(contactName) && item.phNumbers.equals(phNumber)) {
-                    int pos = contacts.indexOf(item);
+
                     contacts.set(pos ,new Contacts(contactName, phNumber, item.nickname));
                     Log.i("Contacts", item.nickname);
                 }
                 else {
-                    contacts.add(new Contacts(contactName, phNumber, "Blank"));
+                    contacts.set(pos, new Contacts(contactName, phNumber, "Blank"));
                     Log.i("Contacts", "Blank nickname");
                 }
             }
