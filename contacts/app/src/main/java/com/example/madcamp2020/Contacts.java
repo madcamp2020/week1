@@ -1,7 +1,8 @@
 package com.example.madcamp2020;
 
 import java.util.ArrayList;
-
+import java.util.Collections;
+import java.util.Comparator;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -30,8 +31,7 @@ public class Contacts implements Parcelable {
         this.phNumbers = contacts;
         this.nickname = nickname;
     }
-    public static ArrayList<Contacts> createContactsList(Context context, Contacts item) {
-        ArrayList<Contacts> contacts = new ArrayList<Contacts>();
+    public static ArrayList<Contacts> createContactsList( ArrayList<Contacts> contacts, Context context, Contacts item) {
         Cursor c = context.getContentResolver().query(
                 ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
                 "starred=?", new String[] {"1"}, null);
@@ -45,7 +45,8 @@ public class Contacts implements Parcelable {
                             .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             if (item!= null) {
                 if (item.name.equals(contactName) && item.phNumbers.equals(phNumber)) {
-                    contacts.add(new Contacts(contactName, phNumber, item.nickname));
+                    int pos = contacts.indexOf(item);
+                    contacts.set(pos ,new Contacts(contactName, phNumber, item.nickname));
                     Log.i("Contacts", item.nickname);
                 }
                 else {
@@ -63,9 +64,26 @@ public class Contacts implements Parcelable {
         return contacts;
     }
     //
-//    public static ArrayList<Contacts> modifyContactsList(Context context, Contacts item) {
-//
-//    }
+    public static ArrayList<Contacts> modifyContactsList(ArrayList<Contacts> contacts, Context context, Contacts item) {
+        int count = 0;
+        while (contacts.size() > count) {
+            Contacts listitem = contacts.get(count);
+            if (item!= null) {
+                if (item.name.equals(listitem.name) && item.phNumbers.equals(listitem.phNumbers)) {
+                    listitem.nickname = item.nickname;
+                    contacts.set(count, listitem);
+                    Log.i("Contacts", item.nickname);
+                }
+                else {
+//                    contacts.add(new Contacts(contactName, phNumber, "Blank"));
+                    Log.i("Contacts", "ModifyContactsElse");
+                }
+            }
+            count++;
+        }
+        return contacts;
+    }
+
     public static final Parcelable.Creator<Contacts> CREATOR = new Creator<Contacts>() {
         @Override
         public Contacts createFromParcel(Parcel parcel) {
@@ -97,7 +115,7 @@ public class Contacts implements Parcelable {
         return phNumbers;
     }
     public void setPhNumbers(String phNumbers) {
-        this.phNumbers =phNumbers;
+        this.phNumbers = phNumbers;
     }
 }
 // 입력받은 숫자의 리스트생성

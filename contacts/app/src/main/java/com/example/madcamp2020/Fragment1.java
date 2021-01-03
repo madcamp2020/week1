@@ -13,11 +13,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class Fragment1 extends Fragment {
     private RecyclerView recyclerView;
     private FragmentAdapter adapter;
-    private ArrayList<Contacts> list = new ArrayList<>();
+    private ArrayList<Contacts> list = ContactsList.getInstance();
     Button loadBtn;
     Contacts item;
 
@@ -29,18 +31,21 @@ public class Fragment1 extends Fragment {
         recyclerView.setHasFixedSize(true);
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 //        list = Contacts.createContactsList(getActivity());
+        AscendingName ascending = new AscendingName();
+
         Bundle bundle = getArguments();
         if (bundle == null) {
-            list = Contacts.createContactsList(getActivity(), null);
+            list = Contacts.createContactsList(list, getActivity(), null);
             Log.i("Fragment1 item", "item null");
         }
         else {
             item = bundle.getParcelable("Contacts");
             Log.i("Fragment1 item", item.nickname);
-            list = Contacts.createContactsList(getActivity(), item);
+            list = Contacts.modifyContactsList(list, getActivity(), item);
             Log.i("Fragment1 item", item.nickname);
 
         }
+        Collections.sort(list, ascending);
         adapter = new FragmentAdapter(getActivity(), list);
         recyclerView.setAdapter(adapter);
         Log.i("Frag", "MainFragment");
@@ -49,5 +54,12 @@ public class Fragment1 extends Fragment {
 //        startActivity(intent);
 //        loadBtn = (Button) rootView.findViewById(R.id.button1);
         return rootView;
+    }
+    static class AscendingName implements Comparator<Contacts> {
+
+        @Override
+        public int compare(Contacts o1, Contacts o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
     }
 }
