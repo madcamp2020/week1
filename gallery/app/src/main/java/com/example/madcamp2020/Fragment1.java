@@ -1,6 +1,7 @@
 package com.example.madcamp2020;
 
 import android.Manifest;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -27,17 +28,22 @@ public class Fragment1 extends Fragment {
     Button loadBtn;
     Contacts item;
 
-//    private Boolean isPermission = true;
+//    private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
+
+    private Boolean isPermission = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
- //       tedPermission();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        tedPermission();
+
+
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_1, container, false);
 //        loadBtn = (Button) rootView.findViewById(R.id.button1);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler1);
@@ -76,7 +82,7 @@ public class Fragment1 extends Fragment {
             return o1.getName().compareTo(o2.getName());
         }
     }
-/*
+
     private void tedPermission() {
 
         PermissionListener permissionListener = new PermissionListener() {
@@ -95,13 +101,15 @@ public class Fragment1 extends Fragment {
             }
         };
 
-        TedPermission.with(getContext().getApplicationContext())
+        Log.d("asdf", "before");
+        TedPermission.with(getActivity())
                 .setPermissionListener(permissionListener)
                 .setRationaleMessage(getResources().getString(R.string.permission_2))
                 .setDeniedMessage(getResources().getString(R.string.permission_1))
-                .setPermissions(Manifest.permission.READ_CONTACTS)
+                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.READ_CONTACTS, Manifest.permission.SEND_SMS)
                 .check();
 
+        Log.d("asdf", "did");
     }
-    */
+
 }
