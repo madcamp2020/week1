@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -103,15 +105,20 @@ public class Fragment3 extends Fragment {
         imageView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                //이부분 startactivity를 startactivityforresult로 수정
-                Intent intent = new Intent(getActivity().getApplicationContext(), DrawActivity.class);
+                try{
+                    //이부분 startactivity를 startactivityforresult로 수정
+                    Intent intent = new Intent(getActivity().getApplicationContext(), DrawActivity.class);
 
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                originalBm.compress(Bitmap.CompressFormat.JPEG, 10, stream);
-                byte[] b = stream.toByteArray();
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    originalBm.compress(Bitmap.CompressFormat.JPEG, 10, stream);
+                    byte[] b = stream.toByteArray();
 
-                intent.putExtra("image", b);
-                startActivityForResult(intent, DRAW_PIC);
+                    intent.putExtra("image", b);
+                    startActivityForResult(intent, DRAW_PIC);
+                }catch(Exception e){
+                    Toast.makeText(getActivity().getApplicationContext(), "사진을 먼저 선택해 주세요", Toast.LENGTH_LONG).show();
+                }
+
             }
         });
 
@@ -201,17 +208,26 @@ public class Fragment3 extends Fragment {
 
                 Log.d(TAG, "tempFile Uri : " + Uri.fromFile(tempFile));
 
+
             } finally {
                 if (cursor != null) {
                     cursor.close();
                 }
             }
 
-            setImage();
+            try {
+                setImage();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         } else if (requestCode == PICK_FROM_CAMERA) {
 
-            setImage();
+            try {
+                setImage();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         }else if (requestCode == DRAW_PIC){
             //여기 자체가 실행 안됨
@@ -281,7 +297,7 @@ public class Fragment3 extends Fragment {
     /**
      *  tempFile 을 bitmap 으로 변환 후 ImageView 에 설정한다.
      */
-    private void setImage() {
+    private void setImage() throws IOException {
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         originalBm = BitmapFactory.decodeFile(tempFile.getAbsolutePath(), options);

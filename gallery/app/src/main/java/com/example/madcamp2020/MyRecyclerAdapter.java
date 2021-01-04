@@ -10,11 +10,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+
+import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.ViewHolder> {
 
@@ -44,6 +50,20 @@ class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.ViewHolde
                 ImageView imageView = (ImageView) view.findViewById(R.id.photo_item);
                 String uri = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
                 Glide.with(context).load(uri).placeholder(R.drawable.ic_launcher_foreground).into(imageView);
+
+                TextView textdate = (TextView) view.findViewById(R.id.time);
+                String date = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN));
+
+                String format = "yyyy-MM-dd HH:mm:ss";
+                SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.KOREA);
+                String dateTime = formatter.format(Long.parseLong(date));
+
+                textdate.setText(dateTime);
+
+                TextView textsubject = (TextView) view.findViewById(R.id.subject);
+                String subject = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME));
+                textsubject.setText(subject);
+
             }
         };
     }
@@ -73,6 +93,10 @@ class MyRecyclerAdapter extends RecyclerView.Adapter<MyRecyclerAdapter.ViewHolde
             public void onClick(View v){
                 Cursor cursor = (Cursor) mCursorAdapter.getItem(position);
                 String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
+//                String date = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN));
+//                String name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME));
+
+
                 Toast.makeText(v.getContext(), "사전경로 : "+path, Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(v.getContext(), DrawBigImage.class);
