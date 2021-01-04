@@ -107,7 +107,7 @@ public class Fragment3 extends Fragment {
                 Intent intent = new Intent(getActivity().getApplicationContext(), DrawActivity.class);
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                originalBm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                originalBm.compress(Bitmap.CompressFormat.JPEG, 10, stream);
                 byte[] b = stream.toByteArray();
 
                 intent.putExtra("image", b);
