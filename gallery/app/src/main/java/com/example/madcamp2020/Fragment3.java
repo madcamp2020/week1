@@ -1,5 +1,6 @@
 package com.example.madcamp2020;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,19 +15,29 @@ import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
+
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Fragment3 extends Fragment {
@@ -38,14 +49,26 @@ public class Fragment3 extends Fragment {
     private static final int PICK_FROM_ALBUM = 1;
     private static final int PICK_FROM_CAMERA = 2;
 
+    private static final int DRAW_PIC = 3;
+
     private File tempFile;
 
     ImageView imageView;
+
+    Bitmap originalBm;
+
+
+    private ArrayList<Contacts> list = ContactsList.getInstance();
+    private Spinner spinner;
+    private ArrayList<String> namelist;
+    private ArrayAdapter<String> arrayAdapter;
+    private int idx;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+ //       tedPermission();
     }
 
     @Override
@@ -53,15 +76,63 @@ public class Fragment3 extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_3, container, false);
+
+        spinner = v.findViewById(R.id.spinner2);
+        namelist = new ArrayList<>();
+        int count = 0;
+        while (list.size()>count) {
+            Contacts item = list.get(count);
+            namelist.add("("+ item.nickname+") " +item.name);
+            count++;
+        }
+        arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, namelist);
+        spinner.setAdapter(arrayAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getActivity(), namelist.get(position)+" was chosen", Toast.LENGTH_SHORT).show();
+                idx = position;
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
         imageView = v.findViewById(R.id.addimage);
 
         imageView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
+                //이부분 startactivity를 startactivityforresult로 수정
                 Intent intent = new Intent(getActivity().getApplicationContext(), DrawActivity.class);
-                startActivity(intent);
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                originalBm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byte[] b = stream.toByteArray();
+
+                intent.putExtra("image", b);
+                startActivityForResult(intent, DRAW_PIC);
             }
         });
+
+        TextView send = (TextView) v.findViewById(R.id.sender);
+        EditText textSMS = (EditText) v.findViewById(R.id.message);
+        send.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                String phoneNo = list.get(idx).phNumbers;
+                String sms = textSMS.getText().toString();
+                try {
+                    SmsManager smsManager = SmsManager.getDefault();
+                    smsManager.sendTextMessage(phoneNo, null, sms, null, null);
+                    Toast.makeText(getActivity().getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    Toast.makeText(getActivity().getApplicationContext(), "SMS failed, please try again later!", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+            }
+        });
+
 
         TextView textgal = v.findViewById(R.id.getphoto);
         TextView textcam = v.findViewById(R.id.takephoto);
@@ -89,7 +160,7 @@ public class Fragment3 extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != Activity.RESULT_OK) {
-            //Toast.makeText(this, "취소 되었습니다.", Toast.LENGTH_SHORT).show();
+            Log.d( "취소 되었습니다." , "tq");
 
             if (tempFile != null) {
                 if (tempFile.exists()) {
@@ -142,6 +213,12 @@ public class Fragment3 extends Fragment {
 
             setImage();
 
+        }else if (requestCode == DRAW_PIC){
+            //여기 자체가 실행 안됨
+            byte[] arr = data.getByteArrayExtra("draw");
+            Log.d("fragment3", arr.toString());
+            Bitmap drawedimage = BitmapFactory.decodeByteArray(arr, 0, arr.length);
+            imageView.setImageBitmap(drawedimage);
         }
     }
 
@@ -207,7 +284,7 @@ public class Fragment3 extends Fragment {
     private void setImage() {
 
         BitmapFactory.Options options = new BitmapFactory.Options();
-        Bitmap originalBm = BitmapFactory.decodeFile(tempFile.getAbsolutePath(), options);
+        originalBm = BitmapFactory.decodeFile(tempFile.getAbsolutePath(), options);
         Log.d(TAG, "setImage : " + tempFile.getAbsolutePath());
 
         imageView.setImageBitmap(originalBm);

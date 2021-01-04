@@ -1,8 +1,14 @@
 package com.example.madcamp2020;
 
 import android.Manifest;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -12,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class DrawActivity extends AppCompatActivity implements View.OnClickListener {
@@ -34,6 +41,21 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
 
         // 변수 초기화
         drawingView = (DrawingView) findViewById(R.id.drawingView);
+/*
+        Intent intent = getIntent();
+        byte[] arr = getIntent().getByteArrayExtra("image");
+        Bitmap image = BitmapFactory.decodeByteArray(arr, 0, arr.length);
+        Drawable d = new BitmapDrawable(getResources(), image);
+
+        drawingView.setBackground(d);
+*/
+        Intent intent = getIntent();
+        byte[] b = intent.getByteArrayExtra("image");
+        Bitmap bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+
+        Drawable d = new BitmapDrawable(getResources(), bitmap);
+
+        drawingView.setBackground(d);
 
         colorImageButtons = new ImageButton[3];
         colorImageButtons[0] = (ImageButton) findViewById(R.id.blackColorBtn);
@@ -89,7 +111,17 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
                 drawingView.reset();
                 break;
             case R.id.saveBtn:
-                drawingView.save(DrawActivity.this);
+                Bitmap draw = drawingView.save(DrawActivity.this);
+                Log.d("fragment4", draw.toString());
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                draw.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                byte[] bytes = stream.toByteArray();
+
+                Intent intent = new Intent();
+                intent.putExtra("draw", bytes);
+                setResult(RESULT_OK, intent);
+
                 finish();
                 break;
         }

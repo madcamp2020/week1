@@ -46,9 +46,9 @@ import java.util.zip.Inflater;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tedPermission();
+//        tedPermission();
     }
-
+/*
     private void tedPermission() {
 
         PermissionListener permissionListener = new PermissionListener() {
@@ -70,7 +70,7 @@ import java.util.zip.Inflater;
                 .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
                 .check();
     }
-
+*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){

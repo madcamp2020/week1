@@ -89,7 +89,7 @@ class DrawingView extends View implements View.OnTouchListener {
     }
 
     // Save Function
-    public void save(Context context){
+    public Bitmap save(Context context){
         this.setDrawingCacheEnabled(true);
         Bitmap screenshot = this.getDrawingCache();
 
@@ -124,7 +124,8 @@ class DrawingView extends View implements View.OnTouchListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.setDrawingCacheEnabled(false);
+//        this.setDrawingCacheEnabled(false);
+        return screenshot;
     }
 
     public int getColor() {
