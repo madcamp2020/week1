@@ -2,6 +2,7 @@ package com.example.madcamp2020;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -10,12 +11,15 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import android.os.Environment;
+import android.os.Process;
 import android.provider.MediaStore;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -32,6 +36,8 @@ import android.widget.Toast;
 
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+import com.klinker.android.send_message.Message;
+import com.klinker.android.send_message.Settings;
 
 import org.w3c.dom.Text;
 
@@ -41,6 +47,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 public class Fragment3 extends Fragment {
 
@@ -82,9 +89,9 @@ public class Fragment3 extends Fragment {
         spinner = v.findViewById(R.id.spinner2);
         namelist = new ArrayList<>();
         int count = 0;
-        while (list.size()>count) {
+        while (list.size() > count) {
             Contacts item = list.get(count);
-            namelist.add("("+ item.nickname+") " +item.name);
+            namelist.add("(" + item.nickname + ") " + item.name);
             count++;
         }
         arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, namelist);
@@ -92,7 +99,7 @@ public class Fragment3 extends Fragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), namelist.get(position)+" was chosen", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), namelist.get(position) + " was chosen", Toast.LENGTH_SHORT).show();
                 idx = position;
             }
             @Override
@@ -125,6 +132,7 @@ public class Fragment3 extends Fragment {
         TextView send = (TextView) v.findViewById(R.id.sender);
         EditText textSMS = (EditText) v.findViewById(R.id.message);
         send.setOnClickListener(new View.OnClickListener(){
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
                 String phoneNo = list.get(idx).phNumbers;
@@ -132,6 +140,14 @@ public class Fragment3 extends Fragment {
                 try {
                     SmsManager smsManager = SmsManager.getDefault();
                     smsManager.sendTextMessage(phoneNo, null, sms, null, null);
+                    ArrayList<Image> fileList = getfiles();
+
+                    fileList = (ArrayList<Image>) fileList.stream().filter(t -> t.bucket_Name.equals("Pictures") && t.name.contains("Title")).collect(Collectors.toList());
+                    //sendFile = new File(cursor.getString(1));
+                    Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(fileList.get(fileList.size()-1).getUri()));
+
+                    //cursor.close();
+                    sendMMS(phoneNo, bitmap, sms);
                     Toast.makeText(getActivity().getApplicationContext(), "전송 완료!", Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
                     Toast.makeText(getActivity().getApplicationContext(), "SMS failed, please try again later!", Toast.LENGTH_LONG).show();
@@ -275,6 +291,48 @@ public class Fragment3 extends Fragment {
         }
     }
 
+    public void sendMMS(String phone, Bitmap bitmap, String content) {
+
+        Log.d(TAG, "sendMMS(Method) : " + "start");
+
+        String subject = "제목";
+        String text = content;
+
+        // 예시 (절대경로) : String imagePath = "/storage/emulated/0/Pictures/Screenshots/Screenshot_20190312-181007.png";
+
+        //String imagePath = sendFile.getAbsolutePath();
+
+        Log.d(TAG, "subject : " + subject);
+        Log.d(TAG, "text : " + text);
+        //Log.d(TAG, "imagePath : " + imagePath);
+
+        Settings settings = new Settings();
+        settings.setUseSystemSending(true);
+
+        // TODO : 이 Transaction 클래스를 위에 링크에서 다운받아서 써야함
+        Transaction transaction = new Transaction(getActivity(), settings);
+
+        // 제목이 있을경우
+        Message message = new Message(text, phone, subject);
+
+        // 제목이 없을경우
+        // Message message = new Message(text, number);
+
+//        if (!(imagePath.equals("") || imagePath == null)) {
+//            // 예시2 (앱 내부 리소스) :
+//            // Bitmap mBitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.mms_test_1);
+//            Bitmap mBitmap = BitmapFactory.decodeFile(imagePath);
+//            // TODO : image를 여러장 넣고 싶은경우, addImage를 계속호출해서 넣으면됨
+//            message.addImage(mBitmap);
+//        }
+        message.addImage(bitmap);
+
+        long id = Process.getThreadPriority(Process.myTid());
+
+        transaction.sendNewMessage(message, id);
+    }
+
+
 
     private File createImageFile() throws IOException {
 
@@ -311,6 +369,85 @@ public class Fragment3 extends Fragment {
          *  기존에 데이터가 남아 있게 되면 원치 않은 삭제가 이뤄집니다.
          */
         tempFile = null;
+
+    }
+
+    class Image {
+        private final Uri uri;
+        private final String name;
+        private final int size;
+        private final Long date;
+        private final Long bucket_ID;
+        private final String bucket_Name;
+
+        public Uri getUri() {
+            return uri;
+        }
+
+
+
+        public Image(Uri uri, String name, int size, Long date, Long bucket_ID, String bucket_Name) {
+            this.uri = uri;
+            this.name = name;
+            this.size = size;
+            this.date = date;
+            this.bucket_ID = bucket_ID;
+            this.bucket_Name = bucket_Name;
+        }
+    }
+
+    public ArrayList<Image> getfiles() {
+        ArrayList<Image> ImageList = new ArrayList<Image>();
+
+        String[] projection = new String[]{
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.DISPLAY_NAME,
+                MediaStore.Images.Media.SIZE,
+                MediaStore.Images.Media.DATE_TAKEN,
+                MediaStore.Images.Media.BUCKET_ID,
+                MediaStore.Images.Media.BUCKET_DISPLAY_NAME
+        };
+
+        String sortOrder = MediaStore.Images.Media.DATE_TAKEN + " DESC";
+
+        try (Cursor cursor = getActivity().getApplicationContext().getContentResolver().query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                projection,
+                null,
+                null,
+                sortOrder
+        )) {
+            // Cache column indices.
+            int idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
+            int nameColumn =
+                    cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
+            int sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE);
+            int dateColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN);
+            int bucketIDColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_ID);
+            int bucketNameCol = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+
+            //int dateColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN);
+
+
+            while (cursor.moveToNext()) {
+                // Get values of columns for a given video.
+                long id = cursor.getLong(idColumn);
+                String name = cursor.getString(nameColumn);
+                int size = cursor.getInt(sizeColumn);
+                Long date = cursor.getLong(dateColumn);
+                String bucketname = cursor.getString(bucketNameCol);
+                Long bucketID = cursor.getLong(bucketIDColumn);
+
+                Uri contentUri = ContentUris.withAppendedId(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+
+                // Stores column values and the contentUri in a local object
+                // that represents the media file.
+                ImageList.add(new Image(contentUri, name, size, date, bucketID, bucketname));
+            }
+            return ImageList;
+
+        }
 
     }
 

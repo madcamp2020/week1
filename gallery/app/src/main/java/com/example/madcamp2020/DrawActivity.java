@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -117,6 +118,8 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 draw.compress(Bitmap.CompressFormat.JPEG, 10, stream);
                 byte[] bytes = stream.toByteArray();
+
+                MediaStore.Images.Media.insertImage(this.getContentResolver(),draw, "Title", null);
 
                 Intent intent = new Intent();
                 intent.putExtra("draw", bytes);
