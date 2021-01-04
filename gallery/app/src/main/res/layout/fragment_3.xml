@@ -8,25 +8,54 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="25dp"
-        android:textSize="20dp"
-        android:background="#B8B8BA"
-        android:fontFamily="@font/neodgm"
-        android:textColor="#707070"
-        android:text="ㅇㅇㅇ님의 미니홈피"/>
+        android:background="#B8B8BA">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:textSize="20dp"
+            android:gravity="center_vertical"
+            android:fontFamily="@font/neodgm"
+            android:textColor="#707070"
+            android:text="ㅇㅇㅇ님의 미니홈피"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:textSize="20dp"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="170dp"
+            android:text="저장"
+            android:fontFamily="@font/neodgm"
+            android:textColor="#F5A10F"/>
+    </LinearLayout>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:textSize="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="15dp"
+        android:background="#F7F7F7"
+        android:fontFamily="@font/neodgm"
+        android:textColor="#2B21B7"
+        android:gravity="center_vertical"
         android:text="To.hi" />
 
     <ImageView
         android:id="@+id/addimage"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:src="@drawable/autocad"/>
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center"
+        android:background="#FFEED3"
+        android:orientation="vertical">
+    </ImageView>
+
+    <EditText
+        android:layout_width="370dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>

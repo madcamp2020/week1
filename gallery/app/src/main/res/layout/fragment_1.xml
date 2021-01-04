@@ -10,6 +10,7 @@
         android:layout_height="25dp"
         android:textSize="20dp"
         android:background="#B8B8BA"
+        android:gravity="center_vertical"
         android:fontFamily="@font/neodgm"
         android:textColor="#707070"
         android:text="ㅇㅇㅇ님의 미니홈피"/>

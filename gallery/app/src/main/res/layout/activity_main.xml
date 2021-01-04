@@ -13,7 +13,6 @@
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="30dp"
         android:background="@color/white"
         app:layout_constraintTop_toTopOf="@+id/tabLayout"
         tools:layout_editor_absoluteX="-89dp"></androidx.viewpager.widget.ViewPager>
@@ -27,9 +26,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0"
-        android:layout_marginBottom="30dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
+        app:tabTextAppearance="@style/tabtext"
         app:tabIndicatorColor="@color/white"
         app:tabBackground="@drawable/tabcolor"
         >

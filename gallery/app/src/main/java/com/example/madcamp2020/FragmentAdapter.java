@@ -1,29 +1,24 @@
-
 package com.example.madcamp2020;
 
 
-        import android.content.Context;
-        import android.text.Layout;
-        import android.util.Log;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.Adapter;
-        import android.widget.TextView;
+import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.content.Intent;
+import androidx.recyclerview.widget.RecyclerView;
 
-        import androidx.annotation.NonNull;
-        import androidx.fragment.app.Fragment;
-        import androidx.recyclerview.widget.RecyclerView;
-
-        import java.util.ArrayList;
-        import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.Holder> {
 
     private Context context;
-    private List<WordItemData> list = new ArrayList<>();
+    private List<Contacts> list = new ArrayList<>();
 
-    public FragmentAdapter(Context context, List<WordItemData> list) {
+    public FragmentAdapter(Context context, List<Contacts> list) {
         this.context = context;
         this.list = list;
     }
@@ -37,12 +32,17 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.Holder
         return holder;
     }
 
+    /*
+     * Todo 만들어진 ViewHolder에 data 삽입 ListView의 getView와 동일
+     *
+     * */
     @Override
     public void onBindViewHolder(Holder holder, int position) {
         // 각 위치에 문자열 세팅
         int itemposition = position;
-        holder.wordText.setText(list.get(itemposition).word);
-        holder.meaningText.setText(list.get(itemposition).meaning);
+        holder.wordText.setText(list.get(itemposition).name);
+        holder.meaningText.setText(list.get(itemposition).phNumbers);
+        holder.nicknameText.setText(list.get(itemposition).nickname);
         Log.e("StudyApp", "onBindViewHolder" + itemposition);
     }
 
@@ -52,15 +52,40 @@ public class FragmentAdapter extends RecyclerView.Adapter<FragmentAdapter.Holder
         return list.size(); // RecyclerView의 size return
     }
 
+
     // ViewHolder는 하나의 View를 보존하는 역할을 한다
     public class Holder extends RecyclerView.ViewHolder{
         public TextView wordText;
         public TextView meaningText;
-
+        public TextView nicknameText;
         public Holder(View view){
             super(view);
             wordText = (TextView) view.findViewById(R.id.wordText);
             meaningText = (TextView) view.findViewById(R.id.meaningText);
+            nicknameText = (TextView) view.findViewById(R.id.nicknameText);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                // TODO Auto-generated method stub
+                    // 추가 기능 넣어줄 것들
+                    int pos = getAdapterPosition() ;
+                    if (pos != RecyclerView.NO_POSITION) {
+                        // TODO : use pos.
+                        Intent intent = new Intent(v.getContext(), ContactsEditActivity.class);
+                        intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
+                        Contacts item = list.get(pos) ;
+                        intent.putExtra("name", item.name);
+                        intent.putExtra("phNumbers", item.phNumbers);
+                        intent.putExtra("Contacts", item);
+                        v.getContext().startActivity(intent);
+                    }
+
+//                list = Contacts.createContactsList(getActivity());
+//                adapter = new FragmentAdapter(getActivity(), list);
+//                recyclerView.setAdapter(adapter);
+//                loadBtn.setVisibility(rootView.GONE);
+                }
+            });
         }
     }
 }
