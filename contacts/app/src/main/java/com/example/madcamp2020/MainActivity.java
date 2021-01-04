@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.tabs.TabLayout;
@@ -20,7 +22,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ViewPager vp = findViewById(R.id.viewpager);
-        ViewpagerAdapter adapter = new ViewpagerAdapter(getSupportFragmentManager());
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        Fragment1 fragment1 = new Fragment1();
+
+        if (bundle != null) {
+            fragment1.setArguments(bundle);
+        }
+        ViewpagerAdapter adapter = new ViewpagerAdapter(getSupportFragmentManager(), fragment1, new Fragment2(), new Fragment3());
         vp.setAdapter(adapter);
 
         TabLayout tab = findViewById(R.id.tabLayout);
