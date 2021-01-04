@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        
+
         ViewPager vp = findViewById(R.id.viewpager);
         Fragment1 fragment1 = new Fragment1();
 

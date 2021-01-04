@@ -12,37 +12,80 @@
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:background="#B8B8BA">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="25dp"
-            android:textSize="20dp"
-            android:gravity="center_vertical"
-            android:fontFamily="@font/neodgm"
-            android:textColor="#707070"
-            android:text="ㅇㅇㅇ님의 미니홈피"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="25dp"
-            android:textSize="20dp"
-            android:gravity="center_vertical"
-            android:layout_marginLeft="170dp"
-            android:text="저장"
             android:fontFamily="@font/neodgm"
-            android:textColor="#F5A10F"/>
+            android:gravity="center_vertical"
+            android:text="ㅇㅇㅇ님의 미니홈피"
+            android:textColor="#707070"
+            android:textSize="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_marginLeft="170dp"
+            android:fontFamily="@font/neodgm"
+            android:gravity="center_vertical"
+            android:text="저장"
+            android:textColor="#F5A10F"
+            android:textSize="20dp" />
     </LinearLayout>
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:textSize="20dp"
+        android:orientation="horizontal"
+        android:background="#F7F7F7"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="15dp"
-        android:background="#F7F7F7"
-        android:fontFamily="@font/neodgm"
-        android:textColor="#2B21B7"
-        android:gravity="center_vertical"
-        android:text="To.hi" />
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="15dp"
+            android:fontFamily="@font/neodgm"
+            android:gravity="center_vertical"
+            android:text="To."
+            android:textColor="#2B21B7"
+            android:textSize="20dp" />
+
+
+        <Spinner
+            android:id="@+id/spinner2"
+            android:layout_width="283dp"
+            android:layout_height="wrap_content"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="#f7f7f7"
+        >
+
+        <TextView
+            android:id="@+id/getphoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="사진"
+            android:textSize="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:id="@+id/takephoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="카메라"
+            android:textSize="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
 
     <ImageView
         android:id="@+id/addimage"
@@ -57,5 +100,6 @@
         android:layout_width="370dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"/>
+
 
 </LinearLayout>
