@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.graphics.drawable.shapes.RectShape;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -50,7 +51,7 @@ public class ContactsEditActivity extends AppCompatActivity {
         Bitmap profile = loadContactPhoto(getApplicationContext().getContentResolver(), item.id, item.photo_id);
         if (profile != null) {
             if (Build.VERSION.SDK_INT>= 21) {
-                profileimage.setBackground(new ShapeDrawable(new OvalShape()));
+                profileimage.setBackground(new ShapeDrawable(new RectShape()));
                 profileimage.setClipToOutline(true);
             }
             profileimage.setImageBitmap(profile);

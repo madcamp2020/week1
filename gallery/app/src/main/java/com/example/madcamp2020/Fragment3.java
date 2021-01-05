@@ -66,6 +66,8 @@ public class Fragment3 extends Fragment {
 
     Bitmap originalBm;
 
+    Bitmap rotatedBitamap;
+
 
     private ArrayList<Contacts> list = ContactsList.getInstance();
     private Spinner spinner;
@@ -118,7 +120,7 @@ public class Fragment3 extends Fragment {
                     Intent intent = new Intent(getActivity().getApplicationContext(), DrawActivity.class);
 
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    originalBm.compress(Bitmap.CompressFormat.JPEG, 10, stream);
+                    rotatedBitamap.compress(Bitmap.CompressFormat.JPEG, 10, stream);
                     byte[] b = stream.toByteArray();
 
                     intent.putExtra("image", b);
@@ -139,6 +141,7 @@ public class Fragment3 extends Fragment {
                 String phoneNo = list.get(idx).phNumbers;
                 String sms = textSMS.getText().toString();
                 try {
+                    sms = "To. (" + list.get(idx).nickname + " " +list.get(idx).name + ") \n" +sms ;
                     SmsManager smsManager = SmsManager.getDefault();
                     smsManager.sendTextMessage(phoneNo, null, sms, null, null);
                     ArrayList<Image> fileList = getfiles();
@@ -360,9 +363,30 @@ public class Fragment3 extends Fragment {
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         originalBm = BitmapFactory.decodeFile(tempFile.getAbsolutePath(), options);
+
+        ExifInterface ei = new ExifInterface(tempFile.getAbsolutePath());
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+
+        rotatedBitamap = null;
+
+        switch(orientation){
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                rotatedBitamap = rotateImage(originalBm, 90);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                rotatedBitamap = rotateImage(originalBm, 180);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                rotatedBitamap = rotateImage(originalBm, 270);
+                break;
+            case ExifInterface.ORIENTATION_NORMAL:
+            default:
+                rotatedBitamap=originalBm;
+        }
+
         Log.d(TAG, "setImage : " + tempFile.getAbsolutePath());
 
-        imageView.setImageBitmap(originalBm);
+        imageView.setImageBitmap(rotatedBitamap);
 
         /**
          *  tempFile 사용 후 null 처리를 해줘야 합니다.
@@ -450,6 +474,12 @@ public class Fragment3 extends Fragment {
 
         }
 
+    }
+
+    public static Bitmap rotateImage(Bitmap source, float angle){
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
 }

@@ -14,14 +14,14 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/neodgm"
         android:text="("
-        android:textSize="20sp"/>
+        android:textSize="20dp"/>
     <TextView
         android:id="@+id/nicknameText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/neodgm"
         android:layout_weight="1"
-        android:textSize="20sp" />
+        android:textSize="20dp" />
 
     <TextView
         android:id="@+id/wordText"
@@ -30,7 +30,7 @@
         android:fontFamily="@font/neodgm"
         android:textColor="#2B21B7"
         android:layout_weight="1"
-        android:textSize="20sp" />
+        android:textSize="20dp" />
 
     <TextView
         android:layout_width="wrap_content"

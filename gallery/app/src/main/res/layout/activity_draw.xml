@@ -65,6 +65,7 @@
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:text="Reset"
+            android:fontFamily="@font/neodgm"
             tools:ignore="ButtonStyle,HardcodedText,NestedWeights" />
 
         <Button
@@ -74,6 +75,7 @@
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:text="Save"
+            android:fontFamily="@font/neodgm"
             tools:ignore="ButtonStyle,HardcodedText" />
 
     </LinearLayout>
@@ -82,6 +84,8 @@
         android:id="@+id/sticker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginRight="30dp"
         android:src="@drawable/sticker"/>
 </LinearLayout>
 

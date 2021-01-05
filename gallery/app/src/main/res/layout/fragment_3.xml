@@ -97,20 +97,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="20dp"
         >
 
         <EditText
             android:id="@+id/message"
-            android:layout_width="370dp"
+            android:layout_width="0dp"
+            android:layout_weight="6"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center"/>
 
         <TextView
             android:id="@+id/sender"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:fontFamily="@font/neodgm"
             android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp"
             android:text="전송"
             android:textColor="#F5A10F"
             android:textSize="20dp" />
