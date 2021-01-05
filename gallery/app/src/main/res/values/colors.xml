@@ -11,4 +11,5 @@
     <color name="colorPrimaryDark">#ADD1DE</color>
     <color name="colorAccent">#ff5c8d</color>
     <color name="darkblue">#258CAF</color>
+    <color name="logo">#fdfdfd</color>
 </resources>

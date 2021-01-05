@@ -16,9 +16,4 @@
         <item name="fontFamily">@font/neodgm</item>
     </style>
 
-    <style name="SplashTheme">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowBackground">@color/darkblue</item>
-    </style>
 </resources>

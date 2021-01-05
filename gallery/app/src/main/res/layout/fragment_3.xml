@@ -55,6 +55,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="30dp"
         android:background="#f7f7f7"
         >
 
@@ -63,18 +65,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="사진"
-            android:textSize="15dp"
             android:layout_marginRight="15dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center_vertical"
+            android:gravity="right"
+            android:layout_weight="1"
+            android:fontFamily="@font/neodgm"/>
 
         <TextView
             android:id="@+id/takephoto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:text="카메라"
-            android:textSize="15dp"
             android:layout_marginLeft="15dp"
-            android:layout_gravity="center"/>
+            android:layout_weight="1"
+            android:fontFamily="@font/neodgm"/>
 
     </LinearLayout>
 
