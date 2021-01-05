@@ -1,18 +1,26 @@
 package com.example.madcamp2020;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,9 +28,17 @@ import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
-public class DrawActivity extends AppCompatActivity implements View.OnClickListener {
+import static android.content.ContentValues.TAG;
+
+public class DrawActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
 
     // 그림을 그릴 CustomView
     private DrawingView drawingView;
@@ -33,6 +49,11 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
     // 초기화 버튼, 저장 버튼
     private Button resetButton, saveButton;
 
+    ImageView sticker;
+
+    float oldXvalue;
+    float oldYvalue;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +61,7 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
 
         tedPermission();
 
+        sticker = (ImageView) findViewById(R.id.sticker);
         // 변수 초기화
         drawingView = (DrawingView) findViewById(R.id.drawingView);
 /*
@@ -70,6 +92,9 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
         resetButton.setOnClickListener(this);
         saveButton = (Button) findViewById(R.id.saveBtn);
         saveButton.setOnClickListener(this);
+
+        sticker.setOnTouchListener(this);
+
     }
 
     private void tedPermission() {
@@ -95,7 +120,57 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        int width = ((ViewGroup) v.getParent()).getWidth() - v.getWidth();
+        int height = ((ViewGroup) v.getParent()).getHeight() - v.getHeight();
 
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            oldXvalue = event.getX();
+            oldYvalue = event.getY();
+            //  Log.i("Tag1", "Action Down X" + event.getX() + "," + event.getY());
+            Log.i("Tag1", "Action Down rX " + event.getRawX() + "," + event.getRawY());
+        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            v.setX(event.getRawX() - oldXvalue);
+            v.setY(event.getRawY() - (oldYvalue + v.getHeight()));
+            //  Log.i("Tag2", "Action Down " + me.getRawX() + "," + me.getRawY());
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+
+            if (v.getX() > width && v.getY() > height) {
+                v.setX(width);
+                v.setY(height);
+            } else if (v.getX() < 0 && v.getY() > height) {
+                v.setX(0);
+                v.setY(height);
+            } else if (v.getX() > width && v.getY() < 0) {
+                v.setX(width);
+                v.setY(0);
+            } else if (v.getX() < 0 && v.getY() < 0) {
+                v.setX(0);
+                v.setY(0);
+            } else if (v.getX() < 0 || v.getX() > width) {
+                if (v.getX() < 0) {
+                    v.setX(0);
+                    v.setY(event.getRawY() - oldYvalue - v.getHeight());
+                } else {
+                    v.setX(width);
+                    v.setY(event.getRawY() - oldYvalue - v.getHeight());
+                }
+            } else if (v.getY() < 0 || v.getY() > height) {
+                if (v.getY() < 0) {
+                    v.setX(event.getRawX() - oldXvalue);
+                    v.setY(0);
+                } else {
+                    v.setX(event.getRawX() - oldXvalue);
+                    v.setY(height);
+                }
+            }
+
+
+        }
+        return true;
+
+}
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -129,4 +204,6 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+
+
 }

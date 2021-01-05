@@ -75,7 +75,14 @@
             android:layout_weight="1"
             android:text="Save"
             tools:ignore="ButtonStyle,HardcodedText" />
+
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/sticker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/sticker"/>
 </LinearLayout>
 
 

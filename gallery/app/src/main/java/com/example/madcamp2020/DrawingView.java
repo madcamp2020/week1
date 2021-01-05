@@ -50,6 +50,9 @@ class DrawingView extends View implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
+
+
+
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_MOVE:
                 Paint p = new Paint();
