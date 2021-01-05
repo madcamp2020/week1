@@ -6,6 +6,7 @@ import java.util.Comparator;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.ContactsContract;
@@ -17,7 +18,8 @@ public class Contacts implements Parcelable {
     public String name;
     public String phNumbers;
     public String nickname;
-    public String photo_id;
+    public Long photo_id;
+    public Long id;
 
     //    final private Context ctx;
     // 화면에 표시될 문자열 초기화
@@ -26,17 +28,30 @@ public class Contacts implements Parcelable {
         this.name = parcel.readString();
         this.phNumbers = parcel.readString();
         this.nickname = parcel.readString();
+        this.photo_id = parcel.readLong();
+        this.id = parcel.readLong();
     }
-    public Contacts(String name, String contacts, String nickname) {
+    public Contacts(String name, String contacts, String nickname, Long photo_id, Long id) {
         this.name = name;
         this.phNumbers = contacts;
         this.nickname = nickname;
+        this.photo_id = photo_id;
+        this.id = id;
+
 
     }
     public static ArrayList<Contacts> createContactsList( ArrayList<Contacts> contacts, Context context, Contacts item) {
+        Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        String[] projection = new String[]{
+                ContactsContract.CommonDataKinds.Phone.NUMBER,
+                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                ContactsContract.Contacts.PHOTO_ID,
+                ContactsContract.Contacts._ID
+        };
+        String sortOrder = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME+ " COLLATE LOCALIZED ASC";
         Cursor c = context.getContentResolver().query(
-                ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                "starred=?", new String[] {"1"}, null);
+                ContactsContract.CommonDataKinds.Phone.CONTENT_URI, projection,
+                "starred=?", new String[] {"1"}, sortOrder);
         while (c.moveToNext()) {
 
             String contactName = c
@@ -45,20 +60,22 @@ public class Contacts implements Parcelable {
             String phNumber = c
                     .getString(c
                             .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            Long contactPhoto =c.getLong(2);
+            Long personid = c.getLong(3);
             if (item!= null) {
                 int pos = contacts.indexOf(item);
                 if (item.name.equals(contactName) && item.phNumbers.equals(phNumber)) {
 
-                    contacts.set(pos ,new Contacts(contactName, phNumber, item.nickname));
+                    contacts.set(pos ,  new Contacts(contactName, phNumber, item.nickname, contactPhoto, personid));
                     Log.i("Contacts", item.nickname);
                 }
                 else {
-                    contacts.set(pos, new Contacts(contactName, phNumber, "Blank"));
+                    contacts.set(pos,  new Contacts(contactName, phNumber, "Blank", contactPhoto, personid));
                     Log.i("Contacts", "Blank nickname");
                 }
             }
             else {
-                contacts.add(new Contacts(contactName, phNumber, "Blank"));
+                contacts.add( new Contacts(contactName, phNumber, "Blank", contactPhoto, personid));
                 Log.i("Contacts", "Blank nickname");
             }
         }
@@ -103,6 +120,8 @@ public class Contacts implements Parcelable {
         dest.writeString(this.name);
         dest.writeString(this.phNumbers);
         dest.writeString(this.nickname);
+        dest.writeLong(this.photo_id);
+        dest.writeLong(this.id);
     }
     @Override
     public int describeContents() {

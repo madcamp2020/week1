@@ -99,11 +99,12 @@ public class Fragment3 extends Fragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getActivity(), namelist.get(position) + " was chosen", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), namelist.get(position) + " was chosen", Toast.LENGTH_SHORT).show();
                 idx = position;
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+                Toast.makeText(getActivity(), " 편지를 보낼 사람을 골라주세요!", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -142,7 +143,7 @@ public class Fragment3 extends Fragment {
                     smsManager.sendTextMessage(phoneNo, null, sms, null, null);
                     ArrayList<Image> fileList = getfiles();
 
-                    fileList = (ArrayList<Image>) fileList.stream().filter(t -> t.bucket_Name.equals("Pictures") && t.name.contains("Title")).collect(Collectors.toList());
+                    fileList = (ArrayList<Image>) fileList.stream().filter(t -> t.bucket_Name.equals("miniworld") && t.name.contains("Title")).collect(Collectors.toList());
                     //sendFile = new File(cursor.getString(1));
                     Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(fileList.get(fileList.size()-1).getUri()));
 

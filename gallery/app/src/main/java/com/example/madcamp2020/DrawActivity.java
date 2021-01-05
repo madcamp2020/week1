@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -53,6 +54,9 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
 
     float oldXvalue;
     float oldYvalue;
+
+    float getXvalue;
+    float getYvalue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +170,8 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
 
+            getXvalue = v.getX();
+            getYvalue = v.getY();
 
         }
         return true;
@@ -190,8 +196,11 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
                 Bitmap draw = drawingView.save(DrawActivity.this);
                 Log.d("fragment4", draw.toString());
 
+                Bitmap stickerdraw = BitmapFactory.decodeResource(this.getResources(), R.drawable.sticker);
+                Bitmap mergedraw =createSingleImageFromMultipleImages(draw, stickerdraw);
+
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                draw.compress(Bitmap.CompressFormat.JPEG, 10, stream);
+                mergedraw.compress(Bitmap.CompressFormat.JPEG, 10, stream);
                 byte[] bytes = stream.toByteArray();
 
                 MediaStore.Images.Media.insertImage(this.getContentResolver(),draw, "Title", null);
@@ -203,6 +212,48 @@ public class DrawActivity extends AppCompatActivity implements View.OnClickListe
                 finish();
                 break;
         }
+    }
+
+
+    private Bitmap createSingleImageFromMultipleImages(Bitmap firstImage, Bitmap secondImage){
+
+        Bitmap result = Bitmap.createBitmap(firstImage.getWidth(), firstImage.getHeight(), firstImage.getConfig());
+        Canvas canvas = new Canvas(result);
+        canvas.drawBitmap(firstImage, 0f, 0f, null);
+        canvas.drawBitmap(secondImage, getXvalue, getYvalue, null);
+
+        String timeStamp = new SimpleDateFormat("HHmmss").format(new Date());
+        String imageFileName = "Title_" + timeStamp + "_";
+
+        try {
+            File storageDir = new File(Environment.getExternalStorageDirectory(), "/miniworld/");
+            if (!storageDir.exists()) storageDir.mkdirs();
+
+            // 파일 생성
+            File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+            Log.d(TAG, "createImageFile : " + image.getAbsolutePath());
+
+            OutputStream outStream = new FileOutputStream(image);
+            result.compress(Bitmap.CompressFormat.PNG, 100, outStream);
+            outStream.close();
+
+            // 갤러리에 변경을 알려줌
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                // 안드로이드 버전이 Kitkat 이상 일때
+                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                Uri contentUri = Uri.fromFile(image);
+                mediaScanIntent.setData(contentUri);
+                this.sendBroadcast(mediaScanIntent);
+            } else {
+                this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+            }
+
+            Toast.makeText(this.getApplicationContext(), "저장완료", Toast.LENGTH_LONG).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
     }
 
 
