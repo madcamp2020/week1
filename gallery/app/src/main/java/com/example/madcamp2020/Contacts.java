@@ -26,7 +26,6 @@ public class Contacts implements Parcelable {
         this.name = parcel.readString();
         this.phNumbers = parcel.readString();
         this.nickname = parcel.readString();
-
     }
     public Contacts(String name, String contacts, String nickname) {
         this.name = name;
@@ -46,8 +45,6 @@ public class Contacts implements Parcelable {
             String phNumber = c
                     .getString(c
                             .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-//edit
-            String photoid = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_ID));
             if (item!= null) {
                 int pos = contacts.indexOf(item);
                 if (item.name.equals(contactName) && item.phNumbers.equals(phNumber)) {
